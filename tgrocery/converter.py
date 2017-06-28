@@ -61,6 +61,7 @@ class GroceryFeatureGenerator(object):
         self.ngram2fidx = {'>>dummy<<': 0}
         self.fidx2ngram = None
 
+    #just count the word frequence
     def unigram(self, tokens):
         feat = defaultdict(int)
         NG = self.ngram2fidx
