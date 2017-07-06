@@ -24,14 +24,17 @@ def _list2dict(l):
 
 class GroceryTextPreProcessor(object):
     def __init__(self):
-        # index must start from 1
+        # index must start from 1, this rule is comes from linearsvm
+        # only in regression we start from 0
         self.tok2idx = {'>>dummy<<': 0}
         self.idx2tok = None
 
+    #use jieba cut_all = True for cut all words, this is just for short text
     @staticmethod
     def _default_tokenize(text):
         return jieba.cut(text.strip(), cut_all=True)
 
+    #return all the token id for this text
     def preprocess(self, text, custom_tokenize):
         if custom_tokenize is not None:
             tokens = custom_tokenize(text)
@@ -61,7 +64,8 @@ class GroceryFeatureGenerator(object):
         self.ngram2fidx = {'>>dummy<<': 0}
         self.fidx2ngram = None
 
-    #just count the word frequence
+    #all tokens will be stored into self.ngram2fidx
+    #feat will return the tokens frequent
     def unigram(self, tokens):
         feat = defaultdict(int)
         NG = self.ngram2fidx
@@ -142,6 +146,7 @@ class GroceryTextConverter(object):
 
     def to_svm(self, text, class_name=None):
         feat = self.feat_gen.bigram(self.text_prep.preprocess(text, self.custom_tokenize))
+        #this condition for predict text
         if class_name is None:
             return feat
         return feat, self.class_map.to_idx(class_name)
@@ -149,6 +154,7 @@ class GroceryTextConverter(object):
     def convert_text(self, text_src, delimiter, output=None):
         if not output:
             output = '%s.svm' % text_src
+        #read the data, data format is: "%s%s%s" % (label, delimiter, text)
         text_src = read_text_src(text_src, delimiter)
         with open(output, 'w') as w:
             for line in text_src:

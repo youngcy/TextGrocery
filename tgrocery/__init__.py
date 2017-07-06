@@ -30,7 +30,7 @@ class Grocery(object):
         text_converter = GroceryTextConverter(custom_tokenize=self.custom_tokenize)
         self.train_svm_file = '%s_train.svm' % self.name
         text_converter.convert_text(train_src, output=self.train_svm_file, delimiter=delimiter)
-        # default parameter
+        # default parameter, this function conmes from learner.learner
         model = train(self.train_svm_file, '', '-s 4')
         self.model = GroceryTextModel(text_converter, model)
         return self
