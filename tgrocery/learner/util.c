@@ -235,6 +235,7 @@ void normalize(struct problem *prob, int binary, int norm, int tf, int idf, doub
 			xi = prob->x[i];
 			while(xi->index != -1)
 			{
+                //what a rude method
 				xi->value = xi->value != 0;
 				++xi;
 			}
